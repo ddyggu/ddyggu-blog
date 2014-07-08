@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<head>
+<title>ddyggu's blog</title>
+<link rel="icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="stylesheet" href="/Resources/css/Reset.css" type="text/css">
+<link rel="stylesheet" href="/Resources/css/Home.css" type="text/css">
+<link rel="stylesheet" href="/Resources/css/form.css" type="text/css">
+<script src="http://code.jquery.com/jquery-1.8.3.js"/></script>
+<script src="/Resources/js/emailform.js"></script>
+</head>
+<body>
+#parse("/template/header.vm")
+<div id="content-background">
+	<section id="content" class="Properties">
+		<div id="login-wrap">
+				<div style="margin:0px auto; width:315px; padding-top:100px; ">
+				<h1 class="form-Title">아이디 / 비밀번호 찾기 </h1>
+				<form id="emailCheck" class="emailCheck" method="post" action="/forgot">
+					<table>
+						<tr>
+							<td>
+								<input type="text" name="email" id="email" placeholder="이메일 입력" style = "ime-mode:disabled;"/>
+								<input type="submit" value="메일수신"/>
+							</td>
+						</tr>
+					</table>
+					<p style="padding-top: 20px; font-size: 12px;">가입시 입력했던 이메일을 입력하여 주십시오.</p>
+					<p style="padding-top: 20px; display:none;" id="wait">
+						<span style="font-size: 12px; font-weight:bold; color:white; padding-top:10px; display:inline-block;">발송중입니다. 잠시만 기다려 주십시오.</span>
+						<span><img src="/Resources/images/smallLoader.gif"/></span></p>
+				</form>
+				</div>
+		</div>
+	</section>
+</div>
+#include("/template/footer.vm")
+</body>
+</html>	
+	
+	

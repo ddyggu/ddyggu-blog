@@ -1,0 +1,34 @@
+#if(${keyword})
+<script>
+var searchType = "${searchType}";
+var keyword = "${keyword}";
+
+$(document).ready(function() {
+	var selector = "#searchType option[value="+searchType+"]";
+	$(selector).attr("selected","true");
+	$("#keyword").attr("value", keyword);	
+});
+</script>
+#end
+<div id="search-container">
+<form action="/boardlist" method="get" name="boardSearch-form" id="boardSearch-form">
+	#if($bbsName == "board") 
+		<span id="bbs-name"><a href="/boardlist?bbs=${bbsName}&pageNum=1">Free board</a></span>
+	#else
+		<span id="bbs-name"><a href="/boardlist?bbs=${bbsName}&pageNum=1">About ${bbsName}</a></span>
+	#end
+	<span id="search-input">
+		<select name="searchType" id="searchType">
+			<option value="title">제목</option>
+			<option value="content">내용</option>
+			<option value="titleAndContent">제목+내용</option>
+			<option value="writer">글쓴이</option>
+		</select>
+		<input type="text" name="keyword" id="keyword">
+		<input type="hidden" name="bbs" value="${bbsName}">	
+	</span>
+</form>
+	<div id="boardSearch-submit-container">
+		<input type="submit" name="search-submit" id="search-submit" value="검색">	
+	</div>
+</div>

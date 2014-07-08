@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<head>
+<link rel="icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="stylesheet" href="/Resources/css/Reset.css" type="text/css">
+<link rel="stylesheet" href="/Resources/css/Home.css" type="text/css">
+<link rel="stylesheet" href="/Resources/css/form.css" type="text/css">
+<script>
+function getCookie(cName) {
+           cName = cName + '=';
+           var cookieData = document.cookie;
+           var start = cookieData.indexOf(cName);
+           var cValue = '';
+          if(start != -1){
+                start += cName.length;
+                var end = cookieData.indexOf(';', start);
+               if(end == -1)end = cookieData.length;
+                cValue = cookieData.substring(start, end);
+           }
+           return unescape(cValue);
+}
+
+window.onload = function() {
+	var id = getCookie('id');
+	if(id) {
+		document.getElementById('id').value = id;
+		document.getElementById('saveId').checked = true;
+	}
+};
+</script>
+<title>Supervisor</title>
+</head>
+<body>
+<div id="login-wrap">
+	<div style="margin:0px auto; width:315px; padding-top:300px;">
+	<h1 class="form-Title">로그인 - Supervisor </h1>
+	<form id="login" class="login" method="post" action="/admin/superviseCheck">
+		<table>
+		<tr>
+			<td>
+				<input type="text" name="id" id="id" placeholder="아이디 입력" style = "ime-mode:disabled;" /><br/>
+				<input type="password" name="pwd" id="pwd" placeholder="비밀번호 입력" />
+			</td>
+			<td>
+				<input type="submit" id="login-submit" value="로그인"/>
+			</td>
+		</tr>
+		</table>
+		<p style="padding-top: 20px; font-size: 12px;">
+		<input type="checkbox" name="saveId" id="saveId" value="true"><span style="margin-right:30px; font-size:12px;">&nbsp;아이디 저장</span>
+		<span><a href="/emailform">아이디 / 비밀번호 찾기</a></span></p>
+	</form>
+	</div>
+</div>
+</body>
+#if(${Check})
+<script>alert("${Check.message}");</script>
+#end
+</html>

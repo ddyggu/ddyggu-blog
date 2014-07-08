@@ -1,0 +1,15 @@
+﻿/* Reset Configuration */
+
+* { margin:0; padding:0; border:0; outline:0; vertical-align:top; color:white; }
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display:block; }
+ul, ol, dl { list-style:none; }
+img, video { max-width:100%; }
+a { text-decoration:none; }
+table { border-collapse:collapse; border-spacing:0; }
+input, select { vertical-align:middle; }
+body { 
+    background:#323532;
+    font-family:"Nanum","돋움",Dotum,Verdana,Arial,AppleGothic,Sans-serif, dotum; font-size:100%; line-height:1; }
+label { cursor:pointer; }
+.blind,legend,hr,caption { display:block; overflow:hidden; position:absolute; top:0; left:-1000em; }
+i,em,address { font-style:normal; font-weight:normal; }

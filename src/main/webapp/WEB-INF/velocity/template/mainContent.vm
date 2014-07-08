@@ -1,0 +1,88 @@
+		<!-- Slider Start -->  
+		<div id="wowslider-container1">
+			<div class="ws_images">
+				<ul>
+					<li>
+						<img src="/Resources/images/slider/main/Peaceful spectacle.jpg" alt="Peaceful spectacle" title="Peaceful spectacle" id="wows1_0"/>
+					</li>
+					<li>
+						<img src="/Resources/images/slider/main/Stunning waterfall.jpg" alt="Stunning waterfall" title="Stunning waterfall" id="wows1_1"/>
+					</li>
+					<li>
+						<img src="/Resources/images/slider/main/beautiful summer.jpg" alt="beautiful summer" title="beautiful summer" id="wows1_2"/>
+					</li>
+					<li>
+						<img src="/Resources/images/slider/main/Lush forest.jpg" alt="Lush forest" title="Lush forest" id="wows1_3"/>
+					</li>
+					<li>
+						<img src="/Resources/images/slider/main/Cute baby cat.jpg" alt="Cute baby cat" title="Cute baby cat" id="wows1_4"/>
+					</li>
+				</ul>
+			</div>	
+			<div class="ws_bullets">
+				<div>
+					<a href="#" title="Peaceful spectacle"><img src="/Resources/images/slider/tooltips/Peaceful spectacle.jpg" alt="Peaceful spectacle"/>1</a>
+					<a href="#" title="Stunning waterfall"><img src="/Resources/images/slider/tooltips/Stunning waterfall.jpg" alt="Stunning waterfall"/>2</a>
+			 		<a href="#" title="Beautiful summer"><img src="/Resources/images/slider/tooltips/beautiful summer.jpg" alt="Beautiful summer"/>3</a>
+			 		<a href="#" title="Lush forest"><img src="/Resources/images/slider/tooltips/Lush forest.jpg" alt="Lush forest"/>4</a>
+			 		<a href="#" title="Cute baby cat"><img src="/Resources/images/slider/tooltips/Cute baby cat.jpg" alt="Cute baby cat"/>5</a>
+				</div>
+			</div>
+			<div class="ws_shadow"></div>
+			<script type="text/javascript" src="/Resources/js/slider-core.js"></script>
+			<script type="text/javascript" src="/Resources/js/slider-script.js"></script>
+		</div>
+		<!-- Slider End -->
+		
+		#macro(makePreviewList $PreviewList)
+			#set($bbsName = $PreviewList.bbsName)
+			#set($boardList = $PreviewList.boardList)
+			#if($boardList.size() > 0)
+				#foreach($board in $boardList)
+					<p class="preview-row">	
+					#set($TitleLength = ${board.boardTitle.length()})
+					#if($TitleLength > 25)
+						#set($slicedCleanTitle = $filter.doFilter(${board.boardTitle.substring(0,25)}))
+						<span class="preview-title">
+							<a href="/contents?bbs=${bbsName}&pageNum=1&boardNum=${board.boardNum}">
+							$slicedCleanTitle...
+							</a>
+						</span>
+					#else
+						#set($CleanTitle = $filter.doFilter(${board.boardTitle}))
+						<span class="preview-title">
+							<a href="/contents?bbs=${bbsName}&pageNum=1&boardNum=${board.boardNum}">
+							$CleanTitle
+							</a>
+						</span>
+					#end
+				<span class="preview-date">${board.formattedDate}</span>
+				</p>
+				#end
+			#else
+				<p style="font-weight:bold;"> 업데이트된 항목이 없습니다. </p>
+			#end
+		#end
+		
+		<article>
+			<h1>Recently Updated</h1>
+			<div id="border" style="margin-bottom:20px;"></div>
+			<div style="width:960px; height:220px;">
+				<div class="preview-container" style="margin-right:30px;">
+					<span class="preview-head">Board</span>
+					#makePreviewList(${BoardPreview})
+				</div>
+				<div class="preview-container">
+					<span class="preview-head">Java</span>
+					#makePreviewList(${JavaPreview})
+				</div>
+				<div class="preview-container" style="margin-right:30px;">
+					<span class="preview-head">Javascript</span>
+					#makePreviewList(${JsPreview})
+				</div>
+				<div class="preview-container">
+					<span class="preview-head">Oracle</span>
+					#makePreviewList(${OraclePreview})
+				</div>
+			</div>	
+	</article>

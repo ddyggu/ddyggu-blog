@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<head>
+<title>ddyggu's blog</title>
+<link rel="icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="stylesheet" href="/Resources/css/Reset.css" type="text/css">
+<link rel="stylesheet" href="/Resources/css/Home.css" type="text/css">
+<link rel="stylesheet" href="/Resources/css/Board.css" type="text/css">
+<script src="http://code.jquery.com/jquery-1.8.3.js"/></script>
+<script src="/Resources/js/common.js"/></script>
+#set($boardList = ${bbsList.boardList})
+#set($paging = ${bbsList.pagingTag})
+#set($bbsName = ${bbsList.bbsName})
+#set($search = ${bbsList.search})
+## Search Model ##
+#set($searchType = ${search.searchType})
+#set($keyword = ${search.keyword})
+</head>
+<body>
+#parse("/template/header.vm")
+<div id="content-background">
+	<section id="content" class="Properties">
+		<div id="BoardList-Table-Space">
+		#parse("/Style/orange/boardSearch.vm")
+		<table id="BoardList-Table">
+			<thead>
+				<th class="number">번호</th>
+				<th class="title">제목</th>
+				<th class="writer">글쓴이</th>
+				<th class="date">날짜</th>
+				<th class="count">조회</th>
+			</thead>
+			<tbody>
+			#if(${boardList})
+				#foreach($board in ${boardList})
+				<tr>
+					<td class="number">${board.boardNum}</td>
+					#set($padding = ${board.level} * 20)
+					#set($width = 600 - $padding)
+					#set($cleanTitle = $filter.doFilter($board.boardTitle))
+					<td class="title" style="padding-left:${padding}px; width:${width}px;">
+						## 검색어가 존재하는 경우 검색어 보존 
+						#if($search)
+							<a href="/contents?bbs=${bbsList.bbsName}&pageNum=${bbsList.pageNum}&boardNum=${board.boardNum}&searchType=${search.searchType}&keyword=${search.keyword}">
+							#if($board.level > 0)
+								<img src="/Resources/images/arrow.png">&nbsp;$cleanTitle</a>
+							#else
+								$cleanTitle</a>
+							#end
+							#if(${board.commentCount} > 0)
+							&nbsp;<span style="color:#febc2e; font-weight:bold;">[${board.commentCount}]</span></td>
+							#end
+						## 일반 리스트
+						#else
+							<a href="/contents?bbs=${bbsList.bbsName}&pageNum=${bbsList.pageNum}&boardNum=${board.boardNum}">
+							#if($board.level > 0)
+								<img src="/Resources/images/arrow.png">&nbsp;$cleanTitle</a>
+							#else
+								$cleanTitle</a>
+							#end
+							#if(${board.commentCount} > 0)
+							&nbsp;<span style="color:#febc2e; font-weight:bold;">[${board.commentCount}]</span></td>
+							#end
+						#end
+							
+					<td class="writer">${board.boardWriter}</td>
+					<td class="date">${board.formattedDate}</td>
+					<td class="count">${board.boardViews}</td>
+				</tr>
+				#end
+			#end
+			#if(${boardList.size()} == 0)
+				<tr>
+					<td colspan="5" style="text-align:center;">글 목록이 존재하지 않습니다. </td>
+				</tr>
+			#end
+			</tbody>
+		</table>
+		</div>
+		<div style="text-align:right; padding-top:10px; ">
+			<form action="/boardWrite" method="GET">
+				<input type="hidden" name="pageNum" value="${bbsList.pageNum}"/>
+				<input type="hidden" name="bbs" value="${bbsList.bbsName}"/>
+				<input type="submit" value="글쓰기">
+			</form>
+		</div>
+		<p id="paging">$!paging</p>
+	</section>
+</div>
+#include("/template/footer.vm")
+#if(${message} == "delete success")
+<script>alert("글 삭제가 완료되었습니다.");</script>
+#end
+#if(${message} == "modify success")
+<script>alert("글 수정이 완료되었습니다.");</script>
+#end
+#if(${message} == "write success")
+<script>alert("글 작성이 완료되었습니다.");</script>
+#end
+</body>
+</html>

@@ -1,0 +1,153 @@
+﻿
+.Properties {
+	width:960px;
+	/* 반응형 max-width:960px; width:100%; */
+	margin:0 auto;
+}
+
+#header-background { 
+	width:100%; height:160px; background-color:#1aabff; 
+}
+	
+header h1 { 
+	float:left; width:30%; 
+	padding-top:60px;
+	text-shadow:2px 3px #7c7e7c;
+	text-align:left; 
+	font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;  
+}
+
+#navigation-wrap {
+	float:left; width:70%;
+}
+
+#top-navigation {
+	float:right; margin-top:10px;
+	font-family: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif;	
+}
+
+#login-navigation {  }
+#login-navigation ul {  }
+#login-navigation ul li { 
+	float:left; border-right:2px solid white; text-align:center; 
+	width:70px; height:10px; padding-top:2px; font-size:12px;
+	font-family:"Nanum","돋움",Dotum,Verdana,Arial,AppleGothic,Sans-serif, dotum !important;
+	font-weight:bold;
+}
+
+#login-navigation ul li:last-child { border:0px;  }
+
+
+#bottom-navigation { 
+	font-weight:bold;  padding-top:55px; line-height:30px;
+	font-family: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif;
+}
+
+/*
+#bottom-navigation ul { margin-left:80px; }
+#bottom-navigation ul li { float:left; width:20%; text-align:center; }
+#bottom-navigation ul li a { color:white; }
+#bottom-navigation ul li a:hover { color:yellow; }
+*/
+
+
+#content-background {
+	height:100%;
+	margin-top:30px;
+	margin-bottom:30px;;
+    min-height:620px;
+    background-color:#323532;
+    position:relative;
+}
+
+#content article { margin-top:50px; }
+#content article h1 { font-family: Franklin Gothic Medium, Franklin Gothic, ITC Franklin Gothic, Arial, sans-serif; font-size:200%; }
+#border { border:4px solid #b0ff05; border-radius:35px; margin-top:10px; }
+#content div[id^=menu] { font-weight:bold; }
+
+.preview-container { font-size:13px; width:460px; height:100px; float:left; margin-bottom:15px;}
+.preview-container a:hover { color:#b0ff05; }
+
+.preview-head {
+	font-weight:bold; 
+	color:#b0ff05; 
+	font-size:14px; 
+	margin-bottom:10px; 
+	display:inline-block;
+}
+
+.preview-title {
+	font-weight:bold; 
+	display:inline-block; 
+	width:310px;
+	margin-bottom:3px;
+}
+
+.preview-date {
+	display:inline-block; 
+	width:140px; 
+	text-align:right;
+	margin-bottom:3px;
+}
+
+#footer-background {
+	height:180px;
+    background-color:#1aabff;
+}
+
+#footer {
+	padding-top:30px; 
+	font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
+	font-size:100%;  	
+}
+
+#footer h3 { margin-bottom:15px; }
+#footer p { margin-bottom:5px; }
+
+
+/* 반응형
+@media screen and (max-width:1024px) {
+	
+}
+
+@media screen and (max-width:768px) {
+
+}
+
+@media screen and (max-width:600px) {
+	header h1 { clear:both; width:100%; margin:0 auto; padding:20px 0 20px 0; }
+	#bottom-navigation { 
+		width:100%; clear:both; height:200px; padding-top:10px; text-align:center;
+	}
+	#bottom-navigation ul { 
+		width:98%; line-height:40px; margin-left:0px; display:inline-block;
+	}
+	#bottom-navigation ul li:nth-child(1), #bottom-navigation ul li:nth-child(2) { 
+		border-top:2px solid white;
+	}
+	#bottom-navigation ul li:nth-child(even) {
+		border-left:0px;
+	}
+	#bottom-navigation ul li { 
+		margin-right:0px;
+		width:49%;
+		height:40px; 
+		text-align:center;
+		border-right:2px solid white;
+		border-left:2px solid white;
+		border-bottom:2px solid white; 
+		
+	}
+	#header-background { padding-top:0px; height:284px; }
+	#content-background { min-height:600px; margin-top:40px; }
+	
+	#navigation-wrap { clear:both; width:100%; margin:0; }
+	#content article { margin-top:50px; }
+	#content article h1 { text-align:center; }
+	#border { margin-left:10px; margin-right:10px; }
+	#footer { max-width:950px; padding-left:10px; }
+}
+
+@media screen and (max-width:480px) { }
+
+*/

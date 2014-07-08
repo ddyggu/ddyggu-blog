@@ -1,0 +1,13 @@
+<div id="LeftMenu-Container" style="width:180px; height:900px; float:left; background-color:#323532; ">
+	<div id="LeftMenu-title" style="font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif; color:white; font-weight:bold; padding:10px;">
+		ddyggu's blog (Supervisor mode)	
+	</div>
+	<div id="LeftMenu-list" style="margin-top:100px; padding:10px; margin-left:15px;">
+		<ul id="menu-list" >
+			<li style="padding-bottom:10px; font-weight:bold; color:white;"><a href="/admin/boardSupervise">게시판 관리</a></li>
+			<li style="padding-bottom:10px; font-weight:bold; color:white;"><a href="/admin/categorySupervise">카테고리 관리</a></li>
+			<li style="padding-bottom:10px; font-weight:bold; color:white;">파일 관리</li>
+			<li style="padding-bottom:10px; font-weight:bold; color:white;">멤버 관리</li>
+		</ul>
+	</div>
+</div>

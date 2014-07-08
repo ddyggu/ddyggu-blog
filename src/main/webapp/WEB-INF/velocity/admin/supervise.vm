@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<head>
+<link rel="icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="stylesheet" href="/Resources/css/Reset.css" type="text/css">
+<link rel="stylesheet" href="/Resources/bootstrap/css/bootstrap.min.css" type="text/css">
+<script src="http://code.jquery.com/jquery-1.8.3.js"/></script>
+<script src="/Resources/bootstrap/js/bootstrap.min.js"/></script>
+<title>ddyggu's blog - Supervisor</title>
+</head>
+<body style="background-color:white;">
+#parse("/admin/menu.vm")
+<div id="MainContent-Container" style="width:800px; height:850px; color:black; float:left; padding:50px;">
+	MainContent
+</div>
+</body>
+</html>

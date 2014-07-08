@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:orcl="http://www.springframework.org/schema/data/orcl"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+							http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+							http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+	
+	
+							
+	<bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close"> 
+        <property name="URL" value="jdbc:oracle:thin:@localhost:1521:ORCL" /> 
+        <property name="user" value="scott"/> 
+        <property name="password" value="tiger"/> 
+        <property name="connectionCachingEnabled" value="true"/> 
+    </bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- myBatis 내용 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="WEB-INF/mybatis/sqlMapper.xml" />
+		<property name="configLocation" value="WEB-INF/mybatis/sqlMap.xml" />
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	<!-- DAO 내용 -->
+	<bean id="membersDao" class="com.school.dao.MembersDAO">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="memberService" class="com.school.service.MemberService">
+		<property name="membersDao" ref="membersDao" />
+	</bean>
+	
+	<bean id="member" class="com.school.bean.Members" scope="prototype" />
+
+</beans>

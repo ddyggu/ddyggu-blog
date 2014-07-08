@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<head>
+<title>ddyggu's blog</title>
+<link rel="icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="stylesheet" href="/Resources/css/Reset.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="/Resources/css/slider-style.css" />
+<link rel="stylesheet" href="/Resources/css/Home.css" type="text/css">
+<script src="http://code.jquery.com/jquery-1.8.3.js"/></script>
+<script src="/Resources/js/common.js"/></script>
+</head>
+<body>
+#parse("/template/header.vm")
+<div id="content-background">
+	<section id="content" class="Properties">
+		<div id="menu4">Menu4</div>
+	</section>
+</div>
+#include("/template/footer.vm")
+</body>
+</html>

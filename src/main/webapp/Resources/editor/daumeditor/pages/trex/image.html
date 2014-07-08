@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>에디터 - 이미지 첨부</title>
+<script src="http://code.jquery.com/jquery-1.8.3.js"/></script> 
+<script src="../../js/popup.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="../../css/popup.css" type="text/css"  charset="utf-8"/>
+<script type="text/javascript">
+// <![CDATA[
+	function initUploader(){
+	    var _opener = PopupUtil.getOpener();
+	    if (!_opener) {
+	        alert('잘못된 경로로 접근하셨습니다.');
+	        return;
+	    }
+	    
+	    var _attacher = getAttacher('image', _opener);
+	    registerAction(_attacher);
+	}
+
+	function locateFile(event) {
+		
+		var formData = new FormData();
+		var length = $('input[type=file]').length;
+		
+		for(var i=0; i < length; i++) {
+			var filename = $('input[type=file]').get(i).value;
+			if(filename == '') {
+				alert("파일을 선택해 주십시오");
+				return false;
+			}
+			var file = $('input[type=file]').get(i).files[0];
+			formData.append('file'+i, file);
+		}
+		
+		$.ajax({
+			url : "/fileWrite", 
+			type : "POST",
+			data : formData,
+			cache : false,
+			contentType : false,
+			processData : false,
+			success : function(data, textStatus, xhr) {
+				var fileMap = $.parseJSON(data);
+			    for(var key in fileMap) {
+			    	execAttach(fileMap[key]);	
+			    }
+			    closeWindow();
+			},
+			error : function(response, status, error) {
+				var msg = $.parseJSON(response.responseText);
+				for(var key in msg) {
+					alert(msg[key]);	
+				}
+			}
+			
+		});
+		event.preventDefault();
+	}
+	
+	function addFile() {
+		var length = $("#file-Container").children().length;
+		if(length > 4) {
+			alert("더 이상 추가할 수 없습니다.");
+			return false;
+		}
+		$("#file-Container").append("<input type='file' name='file[]' style='width:500px; height:20px;' onchange='return ValidateExtension(this);'></input>");
+	}
+	
+	function deleteFile() {
+		var length = $("#file-Container").children().length;
+		if(length < 2) {
+			alert("더 이상 삭제할 수 없습니다.");
+			return false;
+		}
+		$("#file-Container input:last-child").remove();
+	}
+	
+	function ValidateExtension(Object) {
+		
+		if(Object.value=='') { return false; }
+		
+		var filename = Object.value;
+		var ext = filename.substring(filename.lastIndexOf(".")+1);
+		var allowExtension = /.*(gif)|(jpeg)|(jpg)|(png)/i;
+		if(ext === 'bmp') {
+			alert("bmp는 업로드 할 수 없습니다.");
+			Object.value = "";
+			return false;
+		}
+		
+		// 해당하는 확장자가 아닌 경우
+		if(!allowExtension.test(ext)) {
+			alert("사진 파일이 아닙니다.");
+			Object.value = "";
+			return false;
+		}
+	}
+	
+	
+// ]]>
+</script>
+</head>
+<body onload="initUploader();">
+<div class="wrapper">
+	<div class="header">
+		<h1>사진 첨부</h1>
+	</div>
+	<form method="post" id="fileForm" action="/fileWrite" enctype="multipart/form-data">
+	<div id="whole container" style="width:800px;">
+	<div id="file-Container" style="padding:30px; width:500px; float:left;">
+		<input type="file" name="file[]" style="width:500px; height:20px;" onchange="return ValidateExtension(this);"></input> 
+	</div>
+	<div id="button" style="width:150px; float:left; padding-top:25px;"><span style="width:70px; display:inline-block;"><input type="button" onclick="addFile()" value="슬롯추가"></input></span>
+		<span style="width:70px; display:inline-block;"><input type="button" onclick="deleteFile()" value="슬롯삭제"></input></span></div>
+	</div>
+	<div class="footer">
+		<p><a href="#" onclick="closeWindow();" title="닫기" class="close">닫기</a></p>
+		<ul>
+			<li class="submit"><a href="#" onclick="locateFile();" title="등록" class="btnlink">등록</a> </li>
+			<li class="cancel"><a href="#" onclick="closeWindow();" title="취소" class="btnlink">취소</a></li>
+		</ul>
+	</div>
+	</form>
+</div>
+</body>
+</html>

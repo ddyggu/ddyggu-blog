@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:orcl="http://www.springframework.org/schema/data/orcl"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+							http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+							http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+						    http://www.springframework.org/schema/tx
+						    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+						    http://mybatis.org/schema/mybatis-spring
+						    http://mybatis.org/schema/mybatis-spring.xsd">
+
+<!-- WEB-INF/web.xml에서 ApplicationContext.xml을 여러개 등록할 수 있음 -->
+	
+	<bean id="dataSourceTemplate" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" /> 
+        <property name="url" value="jdbc:mysql://localhost:3306/mola"/> 
+        <property name="username" value="root"/> 
+        <property name="password" value="dkepsdms"/> 
+    </bean>
+	
+	<!-- 로컬서버 연결정보  					
+	<bean id="dataSourceTemplate" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" /> 
+        <property name="url" value="jdbc:mysql://localhost:3306/mola"/> 
+        <property name="username" value="root"/> 
+        <property name="password" value="dkepsdms"/> 
+    </bean>
+    -->
+    <!-- 호스팅서버 연결정보  
+    <bean id="dataSourceTemplate" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" /> 
+        <property name="url" value="jdbc:mysql://localhost:3306/ddyggu30"/> 
+        <property name="username" value="ddyggu30"/> 
+        <property name="password" value="clz588689!"/> 
+    </bean>	
+    -->
+    
+    <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+    	<property name="dataSource" ref="dataSourceTemplate"/>
+    	<!-- 특정시간 마다 Validation Query 실행 -->
+    	<property name="validationQuery" value="select 1"/>
+    	<property name="validationInterval" value="34000" />
+    	<property name="testOnBorrow" value="true" />
+    	<property name="testWhileIdle" value="true" />
+    	<property name="timeBetweenEvictionRunsMillis" value="7200000"/>
+    </bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- MyBatis Configuration -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:com/ddyggu/dao/mapper/*.xml" />
+		<property name="configLocation" value="WEB-INF/mybatis/Mysql/mybatis-config.xml" />
+	</bean>
+	
+	<bean id="BoardDAO" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.ddyggu.dao.BoardDAO"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	<bean id="MemberDAO" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.ddyggu.dao.MemberDAO"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="boardService" class="com.ddyggu.service.BoardService">
+		<property name="boardDAO" ref="BoardDAO"/>
+	</bean>
+	<bean id="memberService" class="com.ddyggu.service.MemberService">
+		<property name="memberDAO" ref="MemberDAO"/>
+	</bean>
+	
+	<tx:annotation-driven/>
+	
+	<!-- 
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="memberService" class="com.ddyggu.service.MemberService">
+		<property name="membersDao" ref="membersDao"/>
+	</bean>	
+	 -->	
+	<bean id="member" class="com.ddyggu.bean.Member" scope="prototype" />
+
+</beans>

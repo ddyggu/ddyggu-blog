@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<head>
+<title>ddyggu's blog</title>
+<link rel="icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="stylesheet" href="/Resources/css/Reset.css" type="text/css">
+<link rel="stylesheet" href="/Resources/css/Home.css" type="text/css">
+<link rel="stylesheet" href="/Resources/css/form.css" type="text/css">
+<script src="http://code.jquery.com/jquery-1.8.3.js"/></script>
+<script src="/Resources/js/join.js"/></script>
+</head>
+<body>
+#parse("/template/header.vm")
+<div id="content-background">
+	<section id="content" class="Properties">
+		<h1 style="height:50px;">정보 확인</h1>
+		<fieldset>
+		<p class="necessary-Title">필수정보</p>
+		<p class="necessary">아이디 : $member.id</p>
+		<p class="necessary">비밀번호 : $member.pwd</p>
+		<p class="necessary">닉네임 : $member.nickName</p>
+		<p class="necessary">이메일 : $member.email</p>
+		<p class="necessary">포인트 : $member.point</p>
+		<p class="necessary">등급 : $member.grade</p>
+		</fieldset>
+		<br/>
+		<fieldset>
+		<p class="optional-Title">선택정보</p>
+		<p class="optional">이름 : $!member.actualName</p>	
+		<p class="optional">생년월일 : $!member.BirthYear년 $!member.BirthMonth월 $!member.BirthDay일</p>
+		<p class="optional">주소 : $!member.address</p>
+		<p class="optional">전화번호 : $!member.phone</p>
+		</fieldset>
+		<p class="buttons">
+				<input type="button" id="goBack" value="메인으로"/>
+		</p>
+</section>
+</div>
+#include("/template/footer.vm")
+</body>
+</html>

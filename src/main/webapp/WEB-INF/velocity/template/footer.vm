@@ -1,0 +1,12 @@
+<div id="footer-background">
+		<footer class="Properties" id="footer">
+			<h3>구축 환경</h3> 
+			<article>
+				<p>JDK 1.7.x / Tomcat 7.0.x</p>  
+				<p>Velocity / Servlet 3.0</p>
+				<p>HTML5 / javascript / jquery</p>
+				<p>Spring 3.1.1 / Mybatis-spring 1.2 / Maven</p>
+				<p>MySQL 5.5.x UTF-8</p>  
+			</article>
+		</footer>
+</div>

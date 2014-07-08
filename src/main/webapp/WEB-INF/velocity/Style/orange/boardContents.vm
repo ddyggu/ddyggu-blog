@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<head>
+<title>ddyggu's blog</title>
+<link rel="icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="stylesheet" href="/Resources/css/Reset.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="/Resources/css/slider-style.css" />
+<link rel="stylesheet" href="/Resources/css/Home.css" type="text/css">
+<link rel="stylesheet" href="/Resources/css/Board.css" type="text/css">
+<script src="http://code.jquery.com/jquery-1.8.3.js"/></script>
+<script src="/Resources/js/common.js"/></script>
+
+## BBSContent Model ##
+#set($bbsName = ${bbsContent.bbsName})
+#set($pageNum = ${bbsContent.pageNum})
+#set($commentList = ${bbsContent.commentList})
+#set($boardList = ${bbsContent.boardList})
+#set($search = ${bbsContent.search})
+## BoardList Model ##
+#set($boardDate = ${boardList.formattedDate})
+#set($boardNum = ${boardList.boardNum})
+#set($WriterNum = ${boardList.memberNum})
+#set($boardWriter = ${boardList.boardWriter})
+#set($cleanTitle = $filter.doFilter(${boardList.boardTitle})) 
+#set($cleanContents = $filter.doFilter(${boardList.boardContents}))
+## Search Model ##
+#set($searchType = ${search.searchType})
+#set($keyword = ${search.keyword})
+</head>
+<script>var boardNum = ${boardNum}, bbsName = "${bbsName}"; </script>
+<body>
+#parse("/template/header.vm")
+<div id="content-background">
+	<section id="content" class="Properties">
+		#parse("/Style/orange/boardSearch.vm")
+		<form id="boardContents-form" name="boardContents-form" method="post" enctype="multipart/form-data" action="/writeCheck">
+			<table id="boardContents-table">
+				<tr>
+					<td class="id"><label>글 번호</label></td> 
+					<td style="width:300px;">
+						${boardNum}
+					</td>
+					<td class="Contents-date"><label>날짜</label></td>
+					<td style="padding-top:10px; padding-left:10px;">
+						${boardDate}
+					</td>
+				</tr>
+				<tr>
+					<td class="id"><label>글쓴이</label></td> 
+					<td colspan="3">
+						${boardWriter}
+					</td>
+				</tr>
+				<tr>
+				</tr>
+				<tr>
+					<td class="boardTitle"><label>제목</label></td>
+					<td colspan="3">
+						$cleanTitle
+					</td>	
+				</tr>
+				<tr>
+					<td class="boardContents-column" colspan="4">$cleanContents</td>
+				</tr>
+				## 댓글란
+				#foreach($comment in ${commentList})
+				<tr>
+					#set($cleanComment = $filter.doFilter($comment.commentContents))
+							<td colspan="4" class="commentContainer">
+								<div>
+									<span class="commentWriter">${comment.commentWriter}</span>
+									<span class="commentDate">${comment.formattedDate}</span>
+									#if(${comment.writerNum} == ${member.memberNum}) 
+									<span class="commentDelete"> X </span>
+									#end
+									<div style="line-height:15px;">
+										<pre>$cleanComment</pre>
+									</div>
+								</div>
+							</td>
+							<input type="hidden" id="commentNum" value="${comment.commentNum}">
+				</tr>
+				#end
+				
+				## 댓글 작성란
+				#if(${member.id} && ${session.maintainSession} == "true")
+				<tr class="comment-textarea">
+					<td colspan="4" style="padding:10px;">
+						<textarea id="comment" name="comment" cols="100" rows="3" style="background:#323532; border:1px solid gray; color:white;"></textarea>
+						<input type="button" id="comment-write" style="width:100px; height:56px; color:white; font-weight:bold;" value="등록">
+					</td>		
+				</tr>
+				#else
+				<tr>
+					<td colspan="4" style="padding:10px; text-align:center; font-weight:bold;">
+						<span>댓글을 작성하시려면 <span style="text-decoration:underline;"><a href="/login">로그인</a></span>하여 주십시오</span>
+					</td>
+				</tr>
+				#end
+			</table>
+			<p style="text-align:right; display:inline-block; width:960px; padding-top:10px;">
+				#if( ${member.memberNum} == ${WriterNum} )
+				<input type="button" id="toBoardDelete" value="삭제하기">
+				<input type="button" id="toBoardModify" value="수정하기">
+				#end
+				<input type="button" id="toBoardWrite" value="답글쓰기" onclick ="javascript:location.href='/boardWrite?bbs=${bbsName}&boardNum=${boardNum}&pageNum=${pageNum}&isReply=true'"; >
+				## 검색어 존재할 경우 검색어 보존
+				#if($keyword)
+					<input type="button" id="toBoardList" value="목록으로" onclick="javascript:location.href='/boardlist?bbs=${bbsName}&pageNum=${pageNum}&searchType=${searchType}&keyword=${keyword}';">
+				#else
+					<input type="button" id="toBoardList" value="목록으로" onclick="javascript:location.href='/boardlist?bbs=${bbsName}&pageNum=${pageNum}';">
+				#end
+		</p>
+		</form>
+	</section>
+</div>
+#include("/template/footer.vm")
+#if(${member})
+<script> var nickName = "${member.nickName}", writerNum = ${member.memberNum}; </script>
+#end
+#if(${member.memberNum} == ${WriterNum})
+<script>
+	var toBoardModify = document.getElementById("toBoardModify");
+	toBoardModify.onclick = function() {
+		location.href="/boardPass?bbs=${bbsName}&boardNum=${boardNum}&pageNum=${pageNum}&action=modify";
+	}
+	var toBoardDelete = document.getElementById("toBoardDelete");
+	toBoardDelete.onclick = function() {
+		location.href="/boardPass?bbs=${bbsName}&boardNum=${boardNum}&pageNum=${pageNum}&action=delete";
+	}
+</script>
+#end
+#[[<script>
+	$(document).ready(function() {	
+		$("#boardContents-table").delegate(".commentDelete", "click", function() {
+			var parentTd = $(this).parents("td");
+			var parentTR = parentTd.parent();
+			var commentNum = parentTd.next().attr("value");
+			var commentForm = { 
+				"commentNum" : commentNum, 
+				"boardNum" : boardNum,
+				"commentWriter" : nickName,
+				"bbsName" : bbsName
+			};
+		
+			if(confirm("정말 삭제하시겠습니까?")==true) {
+			
+				$.ajax({
+					url : "/commentDelete",
+					type : "POST",
+					data : JSON.stringify(commentForm),
+					contentType : "application/json; charset=UTF-8",
+					dataType : "json",
+					success : function(data, status, xhr) {
+						parentTR.remove();
+						alert("댓글이 삭제되었습니다.");
+					},
+					error : function(response, status, error) {
+						alert("실패");
+					}
+				});
+		
+			}
+		});
+	
+		$("#comment-write").click(function() {
+			 var comment = $("#comment").val();
+			 
+			 if(comment == '') { alert("내용을 입력하여 주십시오"); return false; }
+			 
+			 var commentForm = {
+			 	"boardNum" : boardNum,
+				"commentWriter" :  nickName,
+			 	"commentContents" : comment,
+				"bbsName" : bbsName,
+				"writerNum" : writerNum,
+			};
+			
+			 $.ajax({
+			 	url : "/commentWrite",
+				type : "POST",
+				data : JSON.stringify(commentForm),
+				contentType : "application/json; charset=UTF-8",
+				dataType : "json",
+				success : function(data, status, xhr) {
+					var id = data.commentWriter;
+					var comment = data.commentContents;
+					var date = data.formattedDate;
+					var num = data.commentNum;
+					var row = $("<tr>"
+									+ "<td colspan='4' class='commentContainer'>"
+									+ "		<div>"
+									+ "			<span class='commentWriter'>"+id+"</span>"
+								    + "			<span class='commentDate'>"+date+"</span>"
+									+ " 		<span class='commentDelete'> X </span>"
+									+ "			<div style='line-height:15px;'>"
+									+ "				<pre>"+comment+"</pre>"
+									+ "			</div>"
+									+ "		</div>"
+									+ " </td>"
+									+ " <input type='hidden' id='commentNum' value='"+num+"'>"
+								+	"</tr>");
+					$(".comment-textarea").before(row);
+					ShowHideTableRow(row,true);
+					$("#comment").val("");
+				},
+				error : function(response, status, error) {
+					alert("오류가 발생하였습니다.");
+				}
+				
+			 });
+			
+		});
+		
+	});
+</script>]]#
+</body>
+</html>

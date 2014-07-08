@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<head>
+<title>ddyggu's blog - Supervisor</title>
+<link rel="icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://ddyggu30.cafe24.com/Resources/images/bg.ico" type="image/x-icon">
+<link rel="stylesheet" href="/Resources/css/Admin-Reset.css" type="text/css">
+<link rel="stylesheet" href="/Resources/bootstrap/css/bootstrap.min.css" type="text/css">
+<script src="http://code.jquery.com/jquery-1.8.3.js"/></script>
+<script src="/Resources/bootstrap/js/bootstrap.min.js"/></script>
+<script src="/Resources/js/utility.js"></script>
+<script>
+
+	$(document).ready(function() {
+	
+		$("#bbsinformation-form input:checkbox").click(function() {
+			var parentTR = $(this).parents("tr");
+			if($(this).attr("checked")) {
+			  $(parentTR).children("td").children("input:text").attr("readonly",false);	
+			} else {
+				$(parentTR).children("td").children("input:text").attr("readonly",true);
+			}				
+		});
+		
+		$("#bbsinformation-form-submit").click(function() {
+		var Container = [];		 	
+		var checked = $("#bbsinformation-form input:checked").length;
+		if(checked == 0) { 
+			alert("수정할 게시판 이름을 선택해주십시오");
+			return false;
+		}
+		
+			$("#bbsinformation-form input:checked").each(function() {
+				 var bbsName = $(this).next().html();
+				 var parentTR = $(this).parents("tr");
+				 var bbsList = {};
+				 
+				 // 원래 게시판 이름 저장
+				 bbsList['bbsName'] = bbsName;
+				 
+				$(parentTR).children("td").children("input:text").each(function() {	
+					var prop = $(this).attr("name");
+					var inputValue = $(this).val();	
+					// 텍스트 필드의 바뀐 속성 저장
+					bbsList[prop] = inputValue;
+					
+					// 마지막 값인 bbsStyle 저장 끝나면 배열 추가
+					if(prop == 'bbsStyle') {
+						bbsList[prop] = inputValue;
+						Container.push(bbsList);
+					}
+				});
+				
+			});
+			
+			$.ajax ({
+				url : "/admin/boardSupervise",
+				type : "POST",
+				data : JSON.stringify(Container),
+				contentType : "application/json; charset=UTF-8",
+				dataType : "json",
+				success : function(data, status, xhr) {
+						alert("성공");
+						location.href="/admin/boardSupervise";
+				},
+				error : function(response, status, error) {
+						alert("실패");
+				}
+			});
+			
+			return false;
+		});
+		
+		$("#delete-submit").click(function() {
+			
+			var deleteContainer = [];
+		
+			$("#bbsinformation-form input:checked").each(function() {
+				var name = $(this).next().html();
+				deleteContainer.push(name);
+			});
+			
+			$.ajax ({
+				url : "/admin/deleteBoard",
+				type : "POST",
+				data : JSON.stringify(deleteContainer),
+				contentType : "application/json; charset=UTF-8",
+				dataType : "json",
+				success : function(data, status, xhr) {
+						alert("성공");
+						location.href="/admin/boardSupervise";
+				},
+				error : function(response, status, error) {
+						alert("실패");
+				}
+			});
+			
+			return false;
+		});
+		
+		$("#addBoard-submit").click(function() {
+			if($("#add-bbsName").val() == '') { alert("게시판 이름을 입력해주십시오"); return false; }
+			if($("#add-limitCount").val() == '') { alert("페이지당 게시물수를 입력해주십시오"); return false; }
+			if($("#add-pageCount").val() == '') { alert("페이지 표시갯수를 입력해주십시오"); return false; }
+			if($("#add-previewCount").val() == '') { alert("프리뷰 표시갯수를 입력해주십시오"); return false; }
+			if($("#add-bbsStyle").val() == '') { alert("게시판 스타일을 입력해주십시오"); return false; }
+		});
+	});
+</script>
+</head>
+<body style="background-color:white;">
+#parse("/admin/menu.vm")
+<div id="MainContent-Container" style="width:800px; height:850px; color:black; float:left; padding:50px;">
+	<div id="bbsinformation-container" style="color:black; margin-bottom:50px;">
+	<form id="bbsinformation-form" name="bbsinformation-form" method="post" action="/admin/boardSupervise">
+	<span class="glyphicon glyphicon-search"></span><h4 style="color:black;">게시판 디자인 정보 수정 </h4>
+	<p style="height:3px; width:580px; background-color:black; margin-top:15px; margin-bottom:15px;">
+	<table>
+		<thead>
+			<th style="height:50px;"></th>
+			<th style="height:50px;"><span style="color:black;">게시판 이름</span></th>
+			<th style="height:50px;"><span style="color:black;">페이지당 게시물수</span></th>
+			<th style="height:50px;"><span style="color:black;">페이지<br/> 표시갯수</span></th>
+			<th style="height:50px;"><span style="color:black;">프리뷰<br/> 표시갯수</span></th>
+			<th style="height:50px;"><span style="color:black;">스타일</span></th>
+        </thead>
+	#set($index = 0)
+	#foreach($bbs in ${bbsList})
+		<tr>
+			<td style="width:150px; padding-top:2px;">
+				<input type="checkbox" name="rowCheck${index}" style="margin-right:10px;">
+				<span style="color:black; font-weight:bold; padding-top:3px; display:inline-block;">${bbs.bbsName}</span></td>
+			<td style="width:120px;">
+				<input type="text" class="replaceBbsName" name="replaceBbsName" value="${bbs.bbsName}" style="color:black; width:100px;" readonly>
+			</td>
+			<td style="width:70px;">
+				<input type="text" class="limitCount" name="limitCount" value="${bbs.limitCount}" style="color:black; width:50px;" readonly>
+			</td>  
+			<td style="width:70px;">
+				<input type="text" class="pageCount" name="pageCount" value="${bbs.pageCount}" style="color:black; width:50px" readonly>
+			</td>
+		    <td style="width:70px;">
+				<input type="text" class="previewCount" name="previewCount" value="${bbs.previewCount}" style="color:black; width:50px" readonly>
+			</td>
+			<td style="width:70px;">
+				<input type="text" class="bbsStyle" name="bbsStyle" value="${bbs.bbsStyle}" style="color:black; width:70px" readonly>
+			</td>
+		</tr>
+	#set($index = $index + 1)
+	#end
+	</table>
+		<p style="display: inline-block; margin-left: 420px;">
+			<input type="submit" id="bbsinformation-form-submit" class="btn btn-default" value="정보수정" style="margin-right:5px;">
+			<input type="button" id="delete-submit" class="btn btn-default" value="삭제">
+		</p>
+	</form>
+	</div>
+	
+	<div id="addBoard-container" style="color:black;">
+	<span class="glyphicon glyphicon-search"></span><h4 style="color:black;">게시판 추가 </h4>
+	<p style="height:3px; width:580px; background-color:black; margin-top:15px; margin-bottom:15px;">
+	<form id="bbsinformation-form" name="bbsinformation-form" method="post" action="/admin/addBoard">
+	<table>
+		<thead>
+			<th style="height:50px;"></th>
+			<th style="height:50px;"><span style="color:black;">게시판 이름</span></th>
+			<th style="height:50px;"><span style="color:black;">페이지당 게시물수</span></th>
+			<th style="height:50px;"><span style="color:black;">페이지<br/> 표시갯수</span></th>
+			<th style="height:50px;"><span style="color:black;">프리뷰<br/> 표시갯수</span></th>
+			<th style="height:50px;"><span style="color:black;">스타일</span></th>
+        </thead>
+		<tr>
+			<td style="width:110px; padding-top:2px; padding-left:40px; font-weight:bold;">추가정보
+			</td>
+			<td style="width:120px;">
+				<input type="text" id="add-bbsName" name="bbsName" style="color:black; width:100px;">
+			</td>
+			<td style="width:70px;">
+				<input type="text" id="add-limitCount" name="limitCount" style="color:black; width:50px;">
+			</td>
+			<td style="width:70px;">
+				<input type="text" id="add-pageCount" name="pageCount" style="color:black; width:50px">
+			</td>
+			<td style="width:70px;">
+				<input type="text" id="add-previewCount" name="previewCount" style="color:black; width:50px">
+			</td>
+			<td style="width:70px;">
+				<input type="text" id="add-bbsStyle" name="bbsStyle" style="color:black; width:70px">
+			</td>
+		</tr>
+	</table>
+	<p style="display: inline-block; margin-left: 465px;"><input type="submit" id="addBoard-submit" class="btn btn-default" value="게시판 추가"></p>
+		</form>
+	</div>
+</div>
+</body>
+</html>

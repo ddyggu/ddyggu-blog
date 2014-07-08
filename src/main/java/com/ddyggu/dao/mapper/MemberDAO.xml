@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddyggu.dao.MemberDAO">
+<resultMap type="member" id="member"/>
+
+<!-- SELECT Group -->
+
+<select id="getMemberById" resultType="member" parameterType="java.lang.String">
+		<![CDATA[
+		SELECT MEMBER_NUM as memberNum, MEMBER_ID as id, PASSWORD as pwd, m.NAME as actualName, NICKNAME, EMAIL, BIRTHYEAR, BIRTHMONTH, BIRTHDAY, 
+				  ADDRESS as address, PHONE, m.POINT, g.NAME as grade
+		FROM members as m JOIN grade as g 
+		ON g.LOW_POINT <= m.POINT and g.HIGH_POINT >= m.POINT
+		WHERE MEMBER_ID=#{id}
+		]]>
+</select>
+<select id="getMemberByEmail" resultType="member" parameterType="java.lang.String">
+		<![CDATA[
+		SELECT MEMBER_NUM as memberNum, MEMBER_ID as id, PASSWORD as pwd, m.NAME as actualName, NICKNAME, EMAIL, BIRTHYEAR, BIRTHMONTH, BIRTHDAY, 
+				  ADDRESS as address, PHONE, m.POINT, g.NAME as grade
+		FROM members as m JOIN grade as g 
+		ON g.LOW_POINT <= m.POINT and g.HIGH_POINT >= m.POINT
+	 	WHERE EMAIL=#{email}
+	 	]]>
+</select>
+<select id="getMemberByNickName" resultType="member" parameterType="java.lang.String">
+		<![CDATA[
+		SELECT MEMBER_NUM as memberNum, MEMBER_ID as id, PASSWORD as pwd, m.NAME as actualName, NICKNAME, EMAIL, BIRTHYEAR, BIRTHMONTH, BIRTHDAY, 
+				  ADDRESS as address, PHONE, m.POINT, g.NAME as grade
+		FROM members as m JOIN grade as g 
+		ON g.LOW_POINT <= m.POINT and g.HIGH_POINT >= m.POINT
+	 	WHERE NICKNAME=#{nickName}
+	 	]]>
+</select>
+<select id="getGradeByPoint" resultType="String" parameterType="Integer">
+		<![CDATA[
+		SELECT NAME FROM grade 
+		WHERE LOW_POINT <= #{point} and HIGH_POINT >= #{point}
+		]]>
+</select>
+
+<!-- SELECT end -->
+
+
+
+<!-- INSERT Group -->
+
+<insert id="memInsert" parameterType="member">
+		INSERT INTO members
+		(MEMBER_ID, PASSWORD, NICKNAME, EMAIL, NAME, BIRTHYEAR, BIRTHMONTH, BIRTHDAY, ADDRESS, PHONE, POINT)
+		VALUES(#{id}, #{pwd}, #{nickName}, #{email}, #{actualName}, #{BirthYear}, #{BirthMonth},#{BirthDay}, #{address}, #{phone}, #{point})
+</insert>
+
+<!-- INSERT End -->
+
+
+
+<!-- UPDATE Group -->
+
+<update id="memUpdate" parameterType="member">
+		UPDATE members SET	
+		PASSWORD=#{pwd}, EMAIL=#{email}, NICKNAME=#{nickName}, NAME=#{actualName}, BIRTHYEAR=#{BirthYear},
+		BIRTHMONTH=#{BirthMonth}, BIRTHDAY=#{BirthDay}, ADDRESS=#{address}, PHONE=#{phone}, POINT=#{point}
+	    WHERE MEMBER_ID=#{id}
+</update>	
+
+<!-- UPDATE Group -->
+
+
+
+<!-- DELETE Group -->
+
+<delete id="deleteAllMembers">
+		DELETE FROM members
+</delete>
+<delete id="deleteOneMember" parameterType="member">
+		DELETE FROM members WHERE MEMBER_ID=#{id}
+</delete>	
+
+<!-- DELETE end -->
+
+</mapper>
+
+
+

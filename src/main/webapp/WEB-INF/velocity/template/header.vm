@@ -1,0 +1,109 @@
+<link rel="stylesheet" href="/Resources/css/superfish.css" type="text/css">
+<script src="/Resources/js/superfish.js"/></script>
+<script src="/Resources/js/hoverIntent.js"></script>
+
+<div id="header-background">
+	<header class="Properties">
+		<h1><a href="/">ddyggu's blog</a></h1>
+		<div id="navigation-wrap">
+			<nav id="top-navigation">
+			#if ( ${member.id} && ${session.maintainSession} == "true")
+				<nav id="login-navigation">
+					<ul class="Login-join">
+						<li><a href="/sitemap">사이트맵</a></li>	
+						<li><a href="/Modify">정보수정</a></li>
+						<li><a href="/logout">로그아웃</a></li>
+					</ul>
+				</nav>
+			#else
+				<nav id="login-navigation">
+					<ul class="Login-join">
+						<li><a href="/sitemap">사이트맵</a></li>	
+						<li><a href="/login">로그인</a></li>	
+						<li><a href="/memJoin">가입</a></li>
+					</ul>
+				</nav>
+			#end
+			</nav>
+			<nav id="bottom-navigation">
+			<ul class="sf-menu" id="main-dropdown">
+			<li style="width:130px; text-align:center;">
+				<a href="/boardlist?bbs=board">Board</a>
+			</li>
+			<li style="width:130px; text-align:center;">
+					<a href="#">Language</a>
+					<ul>
+						<li class="child-li"><a href="/boardlist?bbs=java">Java</a></li>
+						<li class="child-li"><a href="/boardlist?bbs=javascript">Javascript</a></li>
+						<li class="child-li"><a href="/underCons">C++</a></li>
+						<li class="child-li"><a href="/underCons">Ruby</a></li>
+						<li class="child-li"><a href="/underCons">Python</a></li>
+					</ul>
+			</li>
+			<li style="width:130px; text-align:center;">
+				<a href="#">Database</a>
+				<ul>
+					<li class="child-li">
+						<a href="/boardlist?bbs=oracle">Oracle</a>
+					</li>
+					<li class="child-li">
+						<a href="/underCons">Mysql</a>
+					</li>
+					<li class="child-li">
+						<a href="/underCons">Mssql</a>
+					</li>
+					<li class="child-li">
+						<a href="#">ORM</a>
+							<ul>
+							<li><a href="/underCons">JPA</a></li>
+							<li><a href="/underCons">Hibernate</a></li>
+							</ul>
+					</li>
+				</ul>
+			</li>
+			<li style="width:130px; text-align:center;">
+				<a href="#">Others</a>
+				<ul>
+					<li class="child-li">
+						<a href="#">Frameworks</a>
+							<ul>
+							<li><a href="/underCons">Spring</a></li>
+							<li><a href="/underCons">Mybatis</a></li>
+							</ul>
+					</li>
+					<li class="child-li">
+						<a href="/underCons">WebServer</a>
+					</li>
+					<li class="child-li">
+						<a href="/underCons">Mobile</a>
+					</li>
+				</ul>
+			</li>
+			<li style="width:145px; text-align:center;">
+				<a href="#">Programming</a>
+				<ul>
+					<li class="child-li">
+						<a href="/underCons">Data Structure</a>
+					</li>
+					<li class="child-li">
+						<a href="/underCons">Algorithm</a>
+					</li>
+					<li class="child-li">
+						<a href="/underCons">Design pattern</a>
+					</li>
+				</ul>
+			</li>
+			
+		</ul>
+
+			</nav>
+		</div>
+	</header>
+</div>
+##<ul class="nav">
+##<li><a href="/boardlist?bbs=board">BOARD</a></li>
+##<li><a href="/boardlist?bbs=java">JAVA</a></li>
+##<li><a href="/menu3">MENU3</a></li>
+##<li><a href="/menu4">MENU4</a></li>
+##<li><a href="/menu5">MENU5</a></li>
+##</ul>

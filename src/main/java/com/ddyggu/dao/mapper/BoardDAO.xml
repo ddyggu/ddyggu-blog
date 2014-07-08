@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddyggu.dao.BoardDAO">
+
+<!-- SELECT Group -->
+
+<select id="getBoardList" resultType="board" parameterType="HashMap">
+		SELECT boardNum, groupNum, boardTitle, boardContents, commentCount, member_num as memberNum,
+      	boardWriter, boardDate, boardViews, step, level
+		FROM (SELECT boardNum, groupNum, boardTitle, boardContents, commentCount, member_num, boardWriter, boardDate, boardViews, step, level
+     		    FROM ${bbs} ORDER BY groupNum, step) AS ${bbs}
+     	<if test="searchKeyword != null">
+     		<if test="searchKeyword.searchType.equals('title')">
+     		where boardTitle like concat('%',#{searchKeyword.keyword},'%')
+     		</if>  
+			<if test="searchKeyword.searchType.equals('content')">
+			where boardContents like concat('%',#{searchKeyword.keyword},'%')  
+			</if>
+			<if test="searchKeyword.searchType.equals('titleAndContent')">
+			where boardTitle like concat('%',#{searchKeyword.keyword},'%') or boardContents like concat('%',#{searchKeyword.keyword},'%') 
+			</if>
+			<if test="searchKeyword.searchType.equals('writer')">
+			where boardWriter=#{searchKeyword.keyword}  
+			</if>
+		</if>
+		ORDER BY groupNum DESC LIMIT #{LimitStart}, #{LimitCount} 
+		<!-- for Oracle  <![CDATA[
+			SELECT * FROM BLIST_1 WHERE RNUM>=#{pageNum}*10-9 AND RNUM<=#{pageNum}*10
+		]]> -->
+</select>
+<select id="getPreviewBoardList" resultType="board" parameterType="BBSList">
+		<![CDATA[
+		select boardNum, groupNum, boardTitle, boardContents, commentCount, member_num as memberNum, boardWriter, boardDate, boardViews, step, level, boardPass 
+		from ${bbsName} order by boardNum desc
+		limit 0, ${previewCount}
+		]]>
+</select>
+<!-- getTotalRowCount는 페이징 구현시 필요한 SQL -->
+<select id="getTotalRowCount" resultType="Integer">		
+		SELECT COUNT(boardNum) FROM ${bbs}
+		<if test="searchKeyword != null">
+     		<if test="searchKeyword.searchType.equals('title')">
+     		where boardTitle like concat('%',#{searchKeyword.keyword},'%')
+     		</if>  
+			<if test="searchKeyword.searchType.equals('content')">
+			where boardContents like concat('%',#{searchKeyword.keyword},'%')  
+			</if>
+			<if test="searchKeyword.searchType.equals('titleAndContent')">
+			where boardTitle like concat('%',#{searchKeyword.keyword},'%') or boardContents like concat('%',#{searchKeyword.keyword},'%') 
+			</if>
+			<if test="searchKeyword.searchType.equals('writer')">
+			where boardWriter=#{searchKeyword.keyword}  
+			</if>
+		</if>
+</select>
+<!-- getMaxGroupNum은 글 삽입시 필요한 SQL, 가장 최근에 쓰여진 글의 groupNum을 구하고 
+	  그 글에서 +1하여 새로운 글의 groupNum을 부여한다. 원글과 답글을 하나의 groupNum으로 묶기 위함이다. -->
+<select id="getMaxGroupNum" resultType="Integer">
+		SELECT MAX(groupNum) FROM board
+</select>
+<select id="getLastInsert" resultType="Integer" parameterType="Integer">
+		SELECT LAST_INSERT_ID()
+</select>
+<select id="getNeedsUpdateBoardNum" resultType="Integer" parameterType="HashMap">
+	SELECT fileNum FROM file 
+	<if test="paramMap != null">
+		<where>
+			<foreach item="imageUrl" collection="" open="IN (" separator="," close=")">
+				#{imageUrl}
+			</foreach>
+		</where>
+	</if>
+</select>
+<!-- boardNum에 따라 첨부된 파일정보를 반환함 -->
+<select id="getBoardFileList" parameterType="HashMap" resultType="boardFile">
+	SELECT fileNum, fileName, fileSize, thumbUrl, encodedFileName, encodedURL FROM file WHERE boardNum=#{boardNum} and bbsName=#{bbs}
+</select>
+<!-- boardNum에 따라 게시글을 반환함 -->
+<select id="getBoard" parameterType="HashMap" resultType="board">
+		SELECT boardNum, groupNum, boardTitle, boardContents, member_num as memberNum, boardWriter, boardDate, boardViews, step, level, boardPass
+		FROM ${bbs} WHERE boardNum = #{boardNum}
+</select>
+<select id="getGroupBoardList" parameterType="HashMap" resultType="board">
+		SELECT boardNum, groupNum, boardTitle, boardContents, member_num as memberNum, boardWriter, boardDate, boardViews, step, level, boardPass
+		FROM ${bbs} WHERE groupNum = #{groupNum}
+</select>
+<select id="getComment" parameterType="HashMap" resultType="comment">
+	SELECT commentNum, boardNum, commentContents, commentWriter, writerNum, commentDate FROM comment WHERE
+	commentNum=#{commentNum}
+</select>
+<select id="getCommentList" parameterType="HashMap" resultType="comment">
+	SELECT commentNum, boardNum, commentContents, commentWriter, writerNum, commentDate FROM comment WHERE boardNum=#{boardNum} AND bbsName=#{bbsName} ORDER BY commentNum
+</select>
+<select id="getBBSListAll" resultType="bbsList">
+	SELECT bbsName, pageCount, LimitCount, previewCount, bbsStyle from bbsinformation
+</select>
+<select id="getBBSList" parameterType="String" resultType="bbsList">
+	SELECT bbsName, pageCount, LimitCount, previewCount, bbsStyle from bbsinformation where bbsName=#{bbs}
+</select>
+<select id="getBBSContent" parameterType="String" resultType="bbsContent">
+	SELECT bbsName, bbsStyle from bbsinformation where bbsName=#{bbs}
+</select>
+
+<!-- SELECT Group end -->
+
+
+
+
+<!-- INSERT Group -->
+
+<insert id="insertBoard" parameterType="HashMap">
+	INSERT INTO ${bbs}(groupNum, boardTitle, boardContents, member_num, boardWriter,
+    boardDate, boardViews, step, level, boardPass)
+	VALUES(#{boardList.groupNum}, #{boardList.boardTitle}, #{boardList.boardContents}, #{boardList.memberNum}, #{boardList.boardWriter}, now(), 0, 0, 0, #{boardList.boardPass});
+</insert>
+<insert id="insertReply" parameterType="board">
+	INSERT INTO ${bbs}(groupNum, boardTitle, boardContents, member_num, boardWriter,
+	boardDate, boardViews, step, level, boardPass)
+	VALUES(#{boardList.groupNum}, #{boardList.boardTitle}, #{boardList.boardContents}, #{boardList.memberNum}, #{boardList.boardWriter}, now(), 0, #{boardList.step}, #{boardList.level}, #{boardList.boardPass});
+</insert>
+<insert id="insertFileOnDB" parameterType="HashMap">
+	INSERT INTO file(fileName, fileSize, storeDate, thumbUrl, encodedFileName, encodedURL) 
+	VALUES(#{fileName}, #{fileSize}, now(), #{thumbUrl}, #{encodedFileName}, #{encodedURL});
+</insert>
+<insert id="insertComment" parameterType="comment">
+	INSERT INTO comment(bbsName, boardNum, commentContents, commentWriter, writerNum, commentDate) 
+	values (#{bbsName}, #{boardNum}, #{commentContents}, #{commentWriter}, #{writerNum}, now())
+</insert>
+<insert id="insertBBSinformation" parameterType="bbSList">
+	INSERT INTO bbsinformation(bbsName, pageCount, LimitCount, previewCount, bbsStyle) 
+	VALUES (#{bbsName}, #{pageCount}, #{limitCount}, #{previewCount}, #{bbsStyle})
+</insert>
+<!-- INSERT Group end -->
+
+
+<!-- UPDATE Group -->
+<update id="updateGroupNum" parameterType="HashMap">
+	UPDATE ${bbs} SET groupNum=#{boardNum} WHERE boardNum=#{boardNum}
+</update>
+<update id="updateBoardNum" parameterType="HashMap">
+	UPDATE file SET boardNum=#{boardNum}, bbsName=#{bbs}
+	<if test="fileNums!=null">
+		<where>
+			<foreach item="item" collection="fileNums" open="" separator="OR" close="">
+				fileNum=#{item}
+			</foreach>
+		</where>
+	</if>
+</update>
+<update id="updateBoardViews" parameterType="HashMap">
+	UPDATE ${bbs} SET boardViews=boardViews+1 WHERE boardNum=#{boardNum}
+</update>
+<update id="updateBoard" parameterType="HashMap">
+	UPDATE ${bbs} SET boardPass=#{boardList.boardPass}, boardTitle=#{boardList.boardTitle}, boardContents=#{boardList.boardContents}, boardDate=now()
+	WHERE boardNum=#{boardList.boardNum}
+</update>
+<update id="updateCommentCountPlus" parameterType="comment">
+	UPDATE ${bbsName} SET commentCount=commentCount+1 WHERE boardNum=#{boardNum}
+</update>
+<update id="updateCommentCountMinus" parameterType="comment">
+	UPDATE ${bbsName} SET commentCount=commentCount-1 WHERE boardNum=#{boardNum}
+</update>
+<update id="updateBBSInformation" parameterType="bbSList">
+		UPDATE bbsinformation SET bbsName=#{replaceBbsName}, pageCount=#{pageCount}, limitCount=#{limitCount}, previewCount=#{previewCount}, bbsStyle=#{bbsStyle}
+		WHERE bbsName=#{bbsName};	
+</update>
+<update id="createNewBBS" parameterType="bbSList">
+   CREATE TABLE ${bbsName} (
+  `boardNum` smallint(10) NOT NULL AUTO_INCREMENT,
+  `groupNum` smallint(10) DEFAULT NULL,
+  `boardTitle` varchar(100) NOT NULL,
+  `boardContents` text NOT NULL,
+  `commentCount` smallint(6) DEFAULT '0',
+  `member_num` smallint(6) DEFAULT NULL,
+  `boardWriter` varchar(20) NOT NULL,
+  `boardDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `boardViews` smallint(10) NOT NULL,
+  `step` smallint(10) NOT NULL,
+  `level` smallint(10) NOT NULL,
+  `boardPass` varchar(20) NOT NULL,
+  PRIMARY KEY (`boardNum`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;		
+</update>
+<update id="dropTable" parameterType="bbsList">
+	drop table ${bbsName}
+</update>
+<!-- UPDATE Group end -->
+
+
+
+
+
+<!-- DELETE Group -->
+
+<delete id="deleteBoard" parameterType="HashMap">
+	DELETE FROM ${bbs} WHERE BOARDNUM=#{boardList.boardNum}
+</delete>
+<delete id="deleteBoardFile" parameterType="Integer">
+	DELETE FROM file WHERE FILENUM=#{fileNum}
+</delete>
+<delete id="deleteRelateComment" parameterType="Integer">
+	DELETE FROM comment WHERE BOARDNUM=#{boardNum}
+</delete>
+<delete id="deleteComment" parameterType="Integer">
+	DELETE FROM comment WHERE COMMENTNUM=#{commentNum}
+</delete>
+<delete id="deleteBBSinformation" parameterType="bbsList">
+	DELETE FROM bbsinformation where bbsName=#{bbsName}
+</delete>
+<!-- DELETE Group end -->
+
+</mapper>
