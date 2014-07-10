@@ -43,39 +43,39 @@ input[type=button], input[type=submit] {
 }
 
 #search-container {
-	margin-bottom:5px;
-	width:100%;
+	margin-bottom:10px;
 	float:left;
 	clear:right;
+	width:957px;
 }
 
 #search-input {
-	text-align:right;
+	float:right;
 	display:inline-block;
-	height:40px;
-	width:29%;
+	height:30px;
 }
 
 #bbs-name {
     display: inline-block;
-    width:70%;
+    height:15px;
+    float:left;
+    border-radius:3px;
 }
 
 #bbs-name a {
-	color:#fff600;
-	font-size: 25px;
+	color:white;
+	font-size: 20px;
     font-weight: bold;
     font-family: Tahoma, Geneva, sans-serif;
 }
 
 #bbs-name a:hover {
-	color: #ff6000;
-    font-size: 25px;
+	font-size: 20px;
     font-weight: bold;
     font-family: Tahoma, Geneva, sans-serif;
 }
 
-#boardSearch-form {  width:95%; float:left; }
+#boardSearch-form {  margin-right:5px; width:900px; float:left; }
 
 #search-container input[type="text"] {
 	padding:5px;
