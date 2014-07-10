@@ -62,7 +62,7 @@ public class StringUtilityImpl
 
   public boolean isIllegalExtension(String fileName)
   {
-    List allowExtension = new ArrayList(Arrays.asList(new String[] { "jpg", "jpeg", "png", "gif" }));
+    List<String> allowExtension = new ArrayList<String>(Arrays.asList(new String[] { "jpg", "jpeg", "png", "gif" }));
     int namelength = fileName.length();
     String extension = fileName.substring(namelength - 3, namelength);
     return !allowExtension.contains(extension);

@@ -3,16 +3,19 @@ package com.ddyggu.service;
 import com.ddyggu.bean.LoginCheck;
 import com.ddyggu.bean.Member;
 import com.ddyggu.dao.MemberDAO;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class MemberService
-{
+import javax.annotation.Resource;
+
+public class MemberService {
+ 
+  @Resource(name="MemberDAO")
   private MemberDAO memberDao;
 
-  public void setMemberDAO(MemberDAO memberDao)
-  {
+  public void setMemberDAO(MemberDAO memberDao) {
     this.memberDao = memberDao;
   }
 
@@ -49,7 +52,7 @@ public class MemberService
   }
 
   public Map<String, String> ValidateId(Member member) {
-    Map errorMessage = new HashMap();
+    Map<String,String> errorMessage = new HashMap<String,String>();
     String id = member.getId();
 
     if (id.equals(""))
@@ -72,7 +75,7 @@ public class MemberService
   }
 
   public Map<String, String> ValidateNickName(Member member) {
-    Map errorMessage = new HashMap();
+    Map<String,String> errorMessage = new HashMap<String,String>();
 
     String nickName = member.getNickName();
     String id = member.getId();
@@ -105,7 +108,7 @@ public class MemberService
   }
 
   public Map<String, String> ValidateEmail(Member member) {
-    Map errorMessage = new HashMap();
+    Map<String,String> errorMessage = new HashMap<String,String>();
 
     String id = member.getId();
     String email = member.getEmail();

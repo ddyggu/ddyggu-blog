@@ -54,10 +54,10 @@ public class BoardController
 
   @Resource(name="boardService")
   private BoardService boardService;
-
+  
   @Resource(name="StringUtility")
   private StringUtility stringUtil;
-
+  
   @RequestMapping("/boardWrite")
   public String boardWrite(@RequestParam String bbs, @RequestParam(required=false) boolean isReply, @RequestParam(required=false) Integer boardNum, @RequestParam(required=false) Integer pageNum, HttpSession session, Model model)
   {
@@ -123,11 +123,10 @@ public class BoardController
 		  								 @RequestParam String bbs, RedirectAttributes redirectAttributes, 
 		  								 @RequestParam("password") String receivedPassword, Model model) {
     
-	BBSContent bbsContent = this.boardService.getBBSContent(bbs, pageNum);
-    BoardList boardList = this.boardService.getBoard(bbs, boardNum);
+	BBSContent bbsContent = boardService.getBBSContent(bbs, pageNum);
+    BoardList boardList = boardService.getBoard(bbs, boardNum);
     String password = boardList.getBoardPass();
-    String contextPath = this.stringUtil.getAbsoluteUploadPath();
-
+    
     if (!password.equals(receivedPassword)) {
       model.addAttribute("message", "비밀번호가 맞지 않습니다.");
       model.addAttribute("bbsContent", bbsContent);
@@ -136,7 +135,7 @@ public class BoardController
     }
 
     if (action.equals("delete")) {
-    	this.boardService.deleteBoard(bbs, boardList, contextPath);
+    	boardService.deleteBoard(bbs, boardList);
         redirectAttributes.addFlashAttribute("message", "delete success");
         return "redirect:/boardlist?bbs=" + bbs + "&pageNum=" + pageNum;
     }
@@ -155,8 +154,6 @@ public class BoardController
 		  								 @RequestParam(required=false, value="attach_file") String attachFile, 
 		  								 HttpServletRequest request, RedirectAttributes redirectAttributes, Model model) {
 	  
-    String contextPath = this.stringUtil.getAbsoluteUploadPath();
-
     if (result.hasErrors()) {
       model.addAttribute("bbsContent", bbsContent);
       model.addAttribute("boardList", boardList);
@@ -169,7 +166,7 @@ public class BoardController
     }
 
     boardList.setBoardContents(content);
-    this.boardService.updateBoard(bbs, boardList, fileNums, contextPath);
+    boardService.updateBoard(bbs, boardList, fileNums);
     redirectAttributes.addFlashAttribute("message", "modify success");
     return "redirect:/boardlist?bbs=" + bbs + "&pageNum=" + pageNum;
   }
@@ -186,20 +183,20 @@ public class BoardController
       i++)
     {
       MultipartFile file = request.getFile((String)iterator.next());
-      String uploadPath = this.stringUtil.getAbsoluteUploadPath();
+      String uploadPath = stringUtil.getAbsoluteUploadPath();
       String fileName = file.getOriginalFilename();
-      String encodedName = this.stringUtil.encodedFileName(fileName);
-      String encodedURL = this.stringUtil.getRelativePath() + encodedName;
+      String encodedName = stringUtil.encodedFileName(fileName);
+      String encodedURL = stringUtil.getRelativePath() + encodedName;
       long fileSize = file.getSize();
 
-      if (this.stringUtil.isIllegalExtension(fileName)) {
+      if (stringUtil.isIllegalExtension(fileName)) {
         response.setStatus(400);
         map.put("Exception", "허용되는 확장자가 아닙니다.");
       }
 
       EncodedFile encodedFile = null;
       try {
-        encodedFile = this.boardService.insertFilenameOnDB(bbs, fileName, fileSize, encodedName, encodedURL);
+        encodedFile = boardService.insertFilenameOnDB(bbs, fileName, fileSize, encodedName, encodedURL);
         this.boardService.locateFileOnServer(file, uploadPath, encodedName);
       }
       catch (DataIntegrityViolationException e) {
@@ -221,7 +218,7 @@ public class BoardController
   @RequestMapping(value="/fileRead", method=RequestMethod.GET, produces="text/plain;charset=utf-8")
   @ResponseBody
   public Map<String, Object> fileRead(@RequestParam String bbs, @RequestParam int boardNum, HttpServletResponse response) {
-    List<BoardFile> fileList = this.boardService.getBoardFileList(bbs, boardNum);
+    List<BoardFile> fileList = boardService.getBoardFileList(bbs, boardNum);
     Map<String, Object> fileMap = new LinkedHashMap<String,Object>();
     int i = 1;
     for (Iterator<BoardFile> localIterator = fileList.iterator(); localIterator.hasNext(); i++)
@@ -246,14 +243,14 @@ public class BoardController
   @RequestMapping(value="/commentWrite", method=RequestMethod.POST, produces="text/plain;charset=utf-8")
   @ResponseBody
   public Comment commentWrite(@RequestBody Comment comment) { 
-	this.boardService.updateCommentCountPlus(comment);
-    return this.boardService.insertAndGetComment(comment); 
+	boardService.updateCommentCountPlus(comment);
+    return boardService.insertAndGetComment(comment); 
    }
 
   @RequestMapping(value="/commentDelete", method=RequestMethod.POST)
   public @ResponseBody boolean commentDelete(@RequestBody Comment comment) {
-    this.boardService.updateCommentCountMinus(comment);
-    this.boardService.deleteComment(comment.getCommentNum());
+    boardService.updateCommentCountMinus(comment);
+    boardService.deleteComment(comment.getCommentNum());
     return true;
   }
 
@@ -265,7 +262,7 @@ public class BoardController
 	if (pageNum == null) pageNum = Integer.valueOf(1);
 
     Search search = new Search(searchType, keyword);
-    BBSList bbsList = this.boardService.getBBSList(bbs, pageNum, search);
+    BBSList bbsList = boardService.getBBSList(bbs, pageNum, search);
 
     model.addAttribute("bbsList", bbsList);
 
@@ -280,7 +277,7 @@ public class BoardController
     if (pageNum == null) pageNum = Integer.valueOf(1);
 
     Search search = new Search(searchType, keyword);
-    BBSContent bbsContent = this.boardService.getBBSContent(bbs, new Object[] { pageNum, Integer.valueOf(boardNum), search });
+    BBSContent bbsContent = boardService.getBBSContent(bbs, new Object[] { pageNum, Integer.valueOf(boardNum), search });
 
     model.addAttribute("bbsContent", bbsContent);
 

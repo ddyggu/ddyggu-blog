@@ -11,6 +11,8 @@ import com.ddyggu.bean.Search;
 import com.ddyggu.dao.BoardDAO;
 import com.ddyggu.exception.NameNotFoundException;
 import com.ddyggu.util.Paging;
+import com.ddyggu.util.StringUtility;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -20,32 +22,44 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.web.multipart.MultipartFile;
 
-public class BoardService
-{
+public class BoardService {
+  
+  @Resource(name="BoardDAO")
   private BoardDAO boardDao;
+  
+  @Resource(name="StringUtility")
+  private StringUtility stringUtil;
+  
   private static final String listFormat = "yyyy-MM-dd";
   private static final String commentFormat = "yyyy-MM-dd aaa hh:mm:ss";
 
-  private Integer getLastInsert()
-  {
+  private Integer getLastInsert() {
     Integer boardNum = this.boardDao.getLastInsert();
     return boardNum;
   }
 
+  private String getAbsolutePath() {
+	  return stringUtil.getAbsoluteUploadPath();
+  }
+  
   private void updateBoardNum(String bbs, int boardNum, String fileNums) {
     Map<String, Object> paramMap = new HashMap<String, Object>();
 
-    if (fileNums != null) {
-      List<String> nums = new ArrayList<String>(Arrays.asList(fileNums.split(",")));
-      paramMap.put("bbs", bbs);
-      paramMap.put("boardNum", Integer.valueOf(boardNum));
-      paramMap.put("fileNums", nums);
-      this.boardDao.updateBoardNum(paramMap);
-    }
+    	if (fileNums != null) {
+    		List<String> nums = new ArrayList<String>(Arrays.asList(fileNums.split(",")));
+    		paramMap.put("bbs", bbs);
+    		paramMap.put("boardNum", Integer.valueOf(boardNum));
+    		paramMap.put("fileNums", nums);
+    		this.boardDao.updateBoardNum(paramMap);
+    	}
   }
 
   private BBSList getBoardList(BBSList bbsList)
@@ -328,7 +342,7 @@ public class BoardService
   }
 
   public Comment insertAndGetComment(Comment comment) {
-    this.boardDao.insertComment(comment);
+    boardDao.insertComment(comment);
     int commentNum = this.boardDao.getLastInsert().intValue();
 
     Comment InquiredComment = this.boardDao.getComment(commentNum);
@@ -339,18 +353,17 @@ public class BoardService
     return InquiredComment;
   }
 
-  public void updateBoard(String bbs, BoardList boardList, String fileNums, String contextPath) {
-    Map<String, Object> paramMap = new HashMap<String, Object>();
-    paramMap.put("bbs", bbs);
-    paramMap.put("boardList", boardList);
-    this.boardDao.updateBoard(paramMap);
-    int boardNum = boardList.getBoardNum();
-    CheckIdleFileAndUpdate(bbs, boardNum, fileNums, contextPath);
+  public void updateBoard(String bbs, BoardList boardList, String fileNums) {
+	  Map<String, Object> paramMap = new HashMap<String, Object>();
+	  paramMap.put("bbs", bbs);
+	  paramMap.put("boardList", boardList);
+	  this.boardDao.updateBoard(paramMap);
+	  int boardNum = boardList.getBoardNum();
+	  CheckIdleFileAndUpdate(bbs, boardNum, fileNums, getAbsolutePath());
   }
 
-  public void insertBBSInformation(BBSList bbsList)
-  {
-    this.boardDao.insertBBSinformation(bbsList);
+  public void insertBBSInformation(BBSList bbsList) {
+	  this.boardDao.insertBBSinformation(bbsList);
   }
 
   public void updateBBSInformation(BBSLists bbsList)
@@ -364,17 +377,17 @@ public class BoardService
     Map<String, Object> paramMap = new HashMap<String, Object>();
     paramMap.put("bbs", bbsContent.getBbsName());
     paramMap.put("boardNum", Integer.valueOf(boardList.getBoardNum()));
-    this.boardDao.updateBoardViews(paramMap);
+    boardDao.updateBoardViews(paramMap);
   }
 
   public void updateCommentCountPlus(Comment comment)
   {
-    this.boardDao.updateCommentCountPlus(comment);
+    boardDao.updateCommentCountPlus(comment);
   }
 
   public void updateCommentCountMinus(Comment comment)
   {
-    this.boardDao.updateCommentCountMinus(comment);
+    boardDao.updateCommentCountMinus(comment);
   }
 
   public void deleteFileOnServer(String filePath, String fileName) {
@@ -382,8 +395,8 @@ public class BoardService
     uploadFile.delete();
   }
 
-  public void deleteBoard(String bbs, BoardList boardList, String contextPath)
-  {
+  public void deleteBoard(String bbs, BoardList boardList)
+  {  
     int level = boardList.getLevel();
     int step = boardList.getStep();
 
@@ -396,14 +409,14 @@ public class BoardService
 
       for (BoardList board : needDeleteList) {
         deleteOneBoard(bbs, board);
-        deleteFile(bbs, board.getBoardNum(), contextPath);
+        deleteFile(bbs, board.getBoardNum(), getAbsolutePath());
         deleteRelateComment(board.getBoardNum());
       }
     }
     else
     {
       deleteOneBoard(bbs, boardList);
-      deleteFile(bbs, boardList.getBoardNum(), contextPath);
+      deleteFile(bbs, boardList.getBoardNum(), getAbsolutePath());
       deleteRelateComment(boardList.getBoardNum());
     }
   }
@@ -437,9 +450,9 @@ public class BoardService
     this.boardDao.deleteBBSinformation(bbsList);
   }
 
-  public void CheckIdleFileAndUpdate(String bbs, int boardNum, String fileNums, String contextPath)
-  {
-    Map<String, Object> paramMap = new HashMap<String, Object>();
+  public void CheckIdleFileAndUpdate(String bbs, int boardNum, String fileNums, String contextPath) {
+    
+	Map<String, Object> paramMap = new HashMap<String, Object>();
     paramMap.put("bbs", bbs);
     paramMap.put("boardNum", Integer.valueOf(boardNum));
 
@@ -485,8 +498,7 @@ public class BoardService
     }
   }
 
-  public void locateFileOnServer(MultipartFile file, String filePath, String fileName)
-  {
+  public void locateFileOnServer(MultipartFile file, String filePath, String fileName) {
     File uploadPath = new File(filePath, fileName);
     try {
       file.transferTo(uploadPath);
@@ -499,15 +511,14 @@ public class BoardService
     }
   }
 
-  public void createNewBBS(BBSList bbsList)
-  {
-    this.boardDao.createNewBBS(bbsList);
+  public void createNewBBS(BBSList bbsList) {
+	  this.boardDao.createNewBBS(bbsList);
   }
 
-  public void dropTable(String bbs)
-  {
+  public void dropTable(String bbs) {
     BBSList bbsList = new BBSList();
     bbsList.setBbsName(bbs);
     this.boardDao.dropTable(bbsList);
   }
+
 }

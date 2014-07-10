@@ -69,13 +69,10 @@
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
 	</bean>
 	
-	<bean id="boardService" class="com.ddyggu.service.BoardService">
-		<property name="boardDAO" ref="BoardDAO"/>
-	</bean>
-	<bean id="memberService" class="com.ddyggu.service.MemberService">
-		<property name="memberDAO" ref="MemberDAO"/>
-	</bean>
-	
+	<bean id="boardService" class="com.ddyggu.service.BoardService"/>
+		
+	<bean id="memberService" class="com.ddyggu.service.MemberService"/>
+		
 	<tx:annotation-driven/>
 	
 	<!-- 
