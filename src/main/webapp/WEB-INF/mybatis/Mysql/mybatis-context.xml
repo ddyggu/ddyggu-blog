@@ -15,12 +15,12 @@
 
 <!-- WEB-INF/web.xml에서 ApplicationContext.xml을 여러개 등록할 수 있음 -->
 	
-	<bean id="dataSourceTemplate" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+	 <bean id="dataSourceTemplate" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
         <property name="driverClassName" value="com.mysql.jdbc.Driver" /> 
-        <property name="url" value="jdbc:mysql://localhost:3306/mola"/> 
-        <property name="username" value="root"/> 
-        <property name="password" value="dkepsdms"/> 
-    </bean>
+        <property name="url" value="jdbc:mysql://localhost:3306/ddyggu30"/> 
+        <property name="username" value="ddyggu30"/> 
+        <property name="password" value="clz588689!"/> 
+    </bean>	
 	
 	<!-- 로컬서버 연결정보  					
 	<bean id="dataSourceTemplate" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 

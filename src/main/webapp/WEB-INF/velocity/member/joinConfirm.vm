@@ -35,7 +35,7 @@
 		<p class="optional">전화번호 : $!member.phone</p>
 		</fieldset>
 		<p class="buttons">
-				<input type="button" id="goBack" value="메인으로"/>
+				<input type="button" id="goBack" value="메인으로" onclick="javascript:location.href='/';"/>
 		</p>
 </section>
 </div>
