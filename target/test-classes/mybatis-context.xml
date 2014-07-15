@@ -13,14 +13,15 @@
 						    http://mybatis.org/schema/mybatis-spring
 						    http://mybatis.org/schema/mybatis-spring.xsd">
 
-    <!-- WEB-INF/web.xml에서 ApplicationContext.xml을 여러개 등록할 수 있음 -->
+<!-- WEB-INF/web.xml에서 ApplicationContext.xml을 여러개 등록할 수 있음 -->
+
 	<bean id="dataSourceTemplate" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
         <property name="driverClassName" value="com.mysql.jdbc.Driver" /> 
         <property name="url" value="jdbc:mysql://localhost:3306/mola"/> 
         <property name="username" value="root"/> 
         <property name="password" value="dkepsdms"/> 
     </bean>
-   
+	
 	<!-- 로컬서버 연결정보  					
 	<bean id="dataSourceTemplate" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
         <property name="driverClassName" value="com.mysql.jdbc.Driver" /> 
@@ -56,7 +57,7 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="mapperLocations" value="classpath*:com/ddyggu/dao/mapper/*.xml" />
-		<property name="configLocation" value="WEB-INF/mybatis/Mysql/mybatis-config.xml" />
+		<property name="configLocation" value="mybatis-config.xml" />
 	</bean>
 	
 	<bean id="BoardDAO" class="org.mybatis.spring.mapper.MapperFactoryBean">

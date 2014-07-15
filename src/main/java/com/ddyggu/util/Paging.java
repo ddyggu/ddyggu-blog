@@ -15,8 +15,7 @@ public class Paging
   private String searchType;
   private String keyword;
 
-  public Paging(BBSList bbsList)
-  {
+  public Paging(BBSList bbsList) {
     this.maxNum = bbsList.getMaxCount();
     this.pageNum = bbsList.getPageNum();
     this.limitCount = bbsList.getLimitCount();
@@ -25,30 +24,28 @@ public class Paging
 
     Search search = bbsList.getSearch();
 
-    if (search != null) {
-      this.searchType = search.getSearchType();
-      this.keyword = search.getKeyword();
+     if (search != null) {
+    	this.searchType = search.getSearchType();
+      	this.keyword = search.getKeyword();
     }
   }
 
   public String makePageGroup()
   {
-    int totalPage = this.maxNum % this.limitCount > 0 ? this.maxNum / this.limitCount + 1 : this.maxNum / this.limitCount;
+    int totalPage = maxNum % limitCount > 0 ? maxNum / limitCount + 1 : maxNum / limitCount;
 
-    int totalGroup = totalPage % this.pageCount > 0 ? totalPage / this.pageCount + 1 : totalPage / this.pageCount;
-
-    int currentGroup = this.pageNum % this.pageCount > 0 ? this.pageNum / this.pageCount + 1 : this.pageNum / this.pageCount;
-
-    return makeHtml(currentGroup, totalPage, this.bbs);
+    int currentGroup = pageNum % pageCount > 0 ? pageNum / pageCount + 1 : pageNum / pageCount;
+    
+    return makeHtml(currentGroup, totalPage, bbs);
   }
 
   private String makeHtml(int currentGroup, int totalPage, String bbs)
   {
     StringBuffer sb = new StringBuffer();
 
-    int start = currentGroup * this.pageCount - (this.pageCount - 1);
+    int start = currentGroup * pageCount - (pageCount - 1);
 
-    int end = currentGroup * this.pageCount >= totalPage ? totalPage : currentGroup * this.pageCount;
+    int end = currentGroup * pageCount >= totalPage ? totalPage : currentGroup * pageCount;
 
     if (start != 1)
     {
