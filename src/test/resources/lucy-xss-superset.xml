@@ -37,6 +37,17 @@
 				<ref name="Block"/>
 			</elements>
 		</element>
+	
+		<element name="strong" endTag="true">
+			<attributes>
+				<ref name="Attrs"/>
+			</attributes>
+			<elements>
+				<ref name="Inline"/>
+				<ref name="Block"/>
+			</elements>
+		</element>
+	
 	</elementRule>
 	
 	<attributeRule>

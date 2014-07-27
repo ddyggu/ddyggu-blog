@@ -24,6 +24,12 @@ public class xssfilterTest {
 		String clean2 = filter.doFilter(dirty2);
 		System.out.println(clean2);
 		
+		System.out.println("---------------------------------------------------------------");
+		
+		String dirty3 = "<strong><p></strong>";
+		String clean3 = filter.doFilter(dirty3);
+		System.out.println(clean3);
+		
 	}
 
 }
