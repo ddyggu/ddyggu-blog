@@ -26,6 +26,18 @@
 				<ref name="style"/>
 			</attributes>
 		</element>
+		
+		<element name="span" endTag="true">
+			<attributes>
+				<ref name="Attrs"/>
+				<ref name="align"/>
+			</attributes>
+			<elements>
+				<ref name="Inline"/>
+				<ref name="Block"/>
+			</elements>
+		</element>
+		
 	</elementRule>
 	
 	<attributeRule>
