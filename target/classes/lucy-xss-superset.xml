@@ -27,6 +27,14 @@
 			</attributes>
 		</element>
 		
+		<element name="p" endTag="true">
+			<elements>
+				<ref name="table" endTag="true" />
+			</elements>
+		</element>
+		
+		<element name="p" endTag="false"></element>
+		
 		<element name="span" endTag="true">
 			<attributes>
 				<ref name="Attrs"/>
@@ -35,6 +43,23 @@
 			<elements>
 				<ref name="Inline"/>
 				<ref name="Block"/>
+			</elements>
+		</element>
+		
+		<element name="strong" endTag="true">
+			<attributes>
+				<ref name="Attrs"/>
+			</attributes>
+			<elements>
+				<ref name="Inline"/>
+				<ref name="Block"/>
+			</elements>
+		</element>
+		
+		<element name="font" endTag="true">
+			<elements>
+				<ref name="Block"/>
+				<ref name="Inline"/>
 			</elements>
 		</element>
 		

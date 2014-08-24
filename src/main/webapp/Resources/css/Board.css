@@ -216,7 +216,6 @@ input[type=button], input[type=submit] {
 }
 
 #boardContents-table tr > td:nth-child(2) {
-	padding:10px;
 	border:1px solid gray;
 	border-left:0px;
 }

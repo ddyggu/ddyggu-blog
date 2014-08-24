@@ -58,6 +58,36 @@ public class BoardController
   @Resource(name="StringUtility")
   private StringUtility stringUtil;
   
+  
+  @RequestMapping(value="/seFileWrite", method=RequestMethod.POST)
+  public String seFileWrite(MultipartHttpServletRequest request, HttpServletResponse response, Model model) {
+
+	  MultipartFile file = request.getFile("Filedata");
+	  String callback = request.getParameter("callback_func");
+	  
+	  String oName = file.getOriginalFilename();
+	  String fileName = stringUtil.encodedFileName(oName);
+	  String uploadPath = stringUtil.getAbsoluteUploadPath();
+	  
+	  boardService.locateFileOnServer(file, uploadPath, fileName);
+	  response.setStatus(HttpServletResponse.SC_OK);
+	  
+	  model.addAttribute("oName", oName);
+	  model.addAttribute("filename", fileName);
+	  model.addAttribute("callback_func", callback);
+	  
+	  return "/callback";
+  }
+  
+  @RequestMapping(value="/writeTest", method=RequestMethod.POST)
+  public String testWrite(@RequestParam String writer, @RequestParam String title,  @RequestParam String contents1, @RequestParam String contents2) {
+	  System.out.println(writer);
+	  System.out.println(title);
+	  System.out.println(contents1);
+	  System.out.println(contents2);
+	  return null;
+  }
+  
   @RequestMapping("/boardWrite")
   public String boardWrite(@RequestParam String bbs, @RequestParam(required=false) boolean isReply, @RequestParam(required=false) Integer boardNum, @RequestParam(required=false) Integer pageNum, HttpSession session, Model model)
   {
@@ -131,6 +161,7 @@ public class BoardController
       model.addAttribute("message", "비밀번호가 맞지 않습니다.");
       model.addAttribute("bbsContent", bbsContent);
       model.addAttribute("boardList", boardList);
+      model.addAttribute("action", action);
       return "Style/" + bbsContent.getBbsStyle() + "/boardPass";
     }
 
@@ -273,7 +304,7 @@ public class BoardController
   public String boardContents(@RequestParam String bbs, @RequestParam(required=false) Integer pageNum, 
 		  									 @RequestParam int boardNum, @RequestParam(required=false) String searchType, 
 		  									 @RequestParam(required=false) String keyword, Model model) {
-	  
+	
     if (pageNum == null) pageNum = Integer.valueOf(1);
 
     Search search = new Search(searchType, keyword);

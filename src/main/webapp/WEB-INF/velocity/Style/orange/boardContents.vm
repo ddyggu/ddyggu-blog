@@ -40,7 +40,7 @@
 			<table id="boardContents-table">
 				<tr>
 					<td class="id"><label>글 번호</label></td> 
-					<td style="width:300px;">
+					<td style="width:300px; padding-top:10px; padding-left:10px;" >
 						${boardNum}
 					</td>
 					<td class="Contents-date"><label>날짜</label></td>
@@ -50,7 +50,7 @@
 				</tr>
 				<tr>
 					<td class="id"><label>글쓴이</label></td> 
-					<td colspan="3">
+					<td colspan="3" style="padding-top:10px; padding-left:10px;">
 						${boardWriter}
 					</td>
 				</tr>
@@ -58,7 +58,7 @@
 				</tr>
 				<tr>
 					<td class="boardTitle"><label>제목</label></td>
-					<td colspan="3">
+					<td colspan="3" style="padding-top:10px; padding-left:10px;">
 						$cleanTitle
 					</td>	
 				</tr>

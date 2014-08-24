@@ -28,6 +28,7 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.UncategorizedSQLException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 public class BoardService {
@@ -520,5 +521,5 @@ public class BoardService {
     bbsList.setBbsName(bbs);
     this.boardDao.dropTable(bbsList);
   }
-
+  
 }

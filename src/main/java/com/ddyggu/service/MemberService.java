@@ -3,12 +3,16 @@ package com.ddyggu.service;
 import com.ddyggu.bean.LoginCheck;
 import com.ddyggu.bean.Member;
 import com.ddyggu.dao.MemberDAO;
+import com.ddyggu.exception.NameNotFoundException;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+
+import org.springframework.transaction.annotation.Transactional;
 
 public class MemberService {
  
@@ -171,4 +175,13 @@ public class MemberService {
 
     return check;
   }
+  
+  
+  @Transactional
+  public void transactionalTest(Member member) {
+	  memInsert(member);
+	  deleteOneMember(member);
+	  throw new RuntimeException();
+  }
+  
 }

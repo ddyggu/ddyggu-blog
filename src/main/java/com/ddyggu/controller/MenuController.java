@@ -27,21 +27,19 @@ public class MenuController
     return "home";
   }
   @RequestMapping({"/login"})
-  public String login() {
-    return "member/login";
-  }
+  public String login() { return "member/login"; }
   @RequestMapping({"/sitemap"})
   public String sitemap() { return "/sitemap"; } 
   @RequestMapping({"/underCons"})
-  public String underConstruct() {
-    return "underCons";
-  }
+  public String underConstruct() { return "underCons"; }
   @RequestMapping({"/emailform"})
   public String emailform() { return "member/emailform"; } 
   @RequestMapping({"/Modify"})
-  public String modify() {
-    return "member/memModify";
-  }
+  public String modify() { return "member/memModify"; }
+  @RequestMapping({"/testfile"})
+  public String testFile() { return "testFile"; }
+  
+  
   @ExceptionHandler({IllegalStateException.class})
   public ModelAndView IllegalStateExceptionHandler(IllegalStateException ex) {
     ex.printStackTrace();

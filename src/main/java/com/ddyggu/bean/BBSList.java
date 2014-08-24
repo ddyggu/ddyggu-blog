@@ -17,9 +17,7 @@ public class BBSList
   private Search search;
   private List<BoardList> boardList;
 
-  public BBSList()
-  {
-  }
+  public BBSList() { }
 
   public BBSList(String bbsName, int limitCount, int pageCount, int previewCount, String bbsStyle)
   {
